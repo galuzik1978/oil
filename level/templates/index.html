@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+  <head>
+   {%load static %}
+    <title>Big Analytics</title>
+
+      <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Datepicker</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static '/css/datepicker.css' %}">
+
+  </head>
+  <body>
+    <div class="container">
+    <h1>Анализируемый период</h1>
+
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Диапазон дат</span>
+      </div>
+
+      <form action="" method="get">{% csrf_token %}
+      <input name="start_date" type="text" placeholder="Начальная дата" aria-label="First date" class="form-control start-date">
+      <input name='end_date' type="text" placeholder="Крайняя дата" aria-label="End date" class="form-control end-date">
+      <input type="submit" value="выбрать">
+      </form>
+
+      </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script src="{% static 'datepicker.js'%}"></script>
+
+    <script>
+
+    $(function() {
+      var $startDate = $('.start-date');
+      var $endDate = $('.end-date');
+
+      $startDate.datepicker({
+        autoHide: true,
+      });
+      $endDate.datepicker({
+        autoHide: true,
+        startDate: $startDate.datepicker('getDate'),
+      });
+
+      $startDate.on('change', function () {
+        $endDate.datepicker('setStartDate', $startDate.datepicker('getDate'));
+      });
+    });
+  </script>
+
+    <!-- Chartjs libraries -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+    <div class="border" id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
+      <script>
+      _level1 = {{level1|safe}};
+      _data1 = {{data1|safe}};
+      _level2 = {{level2|safe}};
+      _level3 = {{level3|safe}};
+      _level4 = {{level4|safe}};
+
+
+
+      Highcharts.chart('container', {
+	    chart: {
+                zoomType: 'x',
+
+
+	    },
+	    title: {
+              text: 'Уровень масла'
+	    },
+
+	    xAxis: {
+              categories: _data1,
+              gridLineWidth: 0.3,
+              tickInterval: 100,
+              gridLineColor: 'black'
+
+	    },
+	    yAxis: {
+              title: {
+		    text: 'уровень, Л'
+              },
+              gridLineColor: 'black',
+              gridLineWidth: 0.3
+
+	    },
+	    plotOptions: {
+	    format: '{point.y:.1f}',
+                area: {
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[1]],
+                            [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+      <!-- colors: ['#FF0000', '#50B432', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'], -->
+      series: [{
+              name: 'Станок №1',
+              data: _level1
+
+	          },
+	          {
+	          name:'Станок №2',
+	          data:_level2
+	          },
+	          {
+	          name:'Станок №3',
+	          data:_level3
+	          },
+	          {
+	          name:'Станок №4',
+	          data:_level4
+	          }],
+	    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+           }]
+        }
+      });
+      </script>
+    <div class="border" id="container2" style="min-width: 310px; height: 500px; margin: 1 auto"></div>
+      <script>
+      _model1 = {{model1|safe}};
+      _model2={{model2|safe}};
+      _model3={{model3|safe}};
+      _model4={{model4|safe}};
+      _data1 = {{data1|safe}};
+
+      Highcharts.chart('container2', {
+	    chart: {
+                zoomType: 'x',
+
+
+	    },
+	    title: {
+              text: 'Модель'
+	    },
+
+	    xAxis: {
+              categories: _data1,
+              gridLineWidth: 0.3,
+              tickInterval: 100,
+              gridLineColor: 'black',
+
+
+	    },
+	    yAxis: {
+              title: {
+		    text: 'уровень, Л'
+              },
+              gridLineWidth: 0.3,
+
+              gridLineColor: 'black',
+	    },
+	    plotOptions: {
+	            format: '{point.y:.1f}',
+                area: {
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[1]],
+                            [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+
+      series: [{
+              name: 'Станок №1',
+              data: _model1
+              },
+              {
+              name: 'Станок №2',
+              data: _model2
+               },
+               {
+              name: 'Станок №3',
+              data: _model3
+               },
+               {
+              name: 'Станок №4',
+              data: _model4
+               }
+                	         ],
+	    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+           }]
+        }
+      });
+
+
+      </script>
+    <div id="container3" style= 'float: left;'></div>
+    <script>
+    _consumption = {{consumption_per|safe}};
+    Highcharts.chart('container3', {
+  chart: {
+    plotBackgroundColor: null,
+    plotBorderWidth: null,
+    plotShadow: false,
+    type: 'pie'
+  },
+  plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+  tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+  accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+  title: {
+              text: 'Расход'
+	    },
+  series: [{
+    name: 'Расход',
+    colorByPoint: true,
+    data:[{
+            name: 'Станок 1',
+            y: _consumption[0],
+
+        }, {
+            name: 'Станок 2',
+            y: _consumption[1],
+        }, {
+            name: 'Станок 3',
+            y: _consumption[2],
+        }, {
+            name: 'Станок 4',
+            y: _consumption[3],
+        }]
+    }]
+    });
+  </script>
+
+    <div id="container4"style= 'float: left;'></div>
+    <script>
+    _doliv = {{doliv_per|safe}};
+    Highcharts.chart('container4', {
+  chart: {
+    plotBackgroundColor: null,
+    plotBorderWidth: null,
+    plotShadow: false,
+    type: 'pie'
+  },
+  tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+  accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+  title: {
+              text: 'Долив'
+	    },
+
+  series: [{
+    name: 'долив',
+    colorByPoint: true,
+    data:[{
+            name: 'Станок 1',
+            y: _doliv[0],
+
+        }, {
+            name: 'Станок 2',
+            y: _doliv[1],
+        }, {
+            name: 'Станок 3',
+            y: _doliv[2],
+        }, {
+            name: 'Станок 4',
+            y: _doliv[3],
+        }]
+    }]
+    });
+
+  </script>
+    <div id="container5" style= 'float: left;'></div>
+    <script>
+    _con = {{consumption|safe}};
+    Highcharts.chart('container5', {
+ chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Утечки масла'
+    },
+
+    xAxis: {
+            categories: [
+             'станок 1',
+             'станок 2',
+             'станок 3',
+             'станок 4'
+
+            ],
+        crosshair: true
+    },
+
+    yAxis: {
+         title: {
+            text: 'Утечки масла, литров'
+        },
+
+    },
+    tooltip: {
+        pointFormat: ' {series.name} утечка <b>{point.y:.,.2f}</b><br/>л '
+    },
+
+
+    plotOptions: {
+        column: {
+
+            dataLabels: {
+                enabled: true,
+                 format: '{point.y:.1f}', // one decimal
+            }
+        }
+    },
+    series: [{
+        name: 'Предшествующий период',
+        data: [_con[4], _con[5], _con[6], _con[7]],
+
+    },{
+        name: 'Текущий период',
+        data: [_con[0], _con[1], _con[2], _con[3]],
+
+    } ]
+});
+  </script>
+
+    <div id="container6"style= 'float: left;'></div>
+    <script>
+    _dol = {{doliv|safe}};
+    _old={{old_dol|safe}};
+
+    Highcharts.chart('container6', {
+ chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Долив масла'
+    },
+
+    xAxis: {
+            categories: [
+             'станок 1',
+             'станок 2',
+             'станок 3',
+             'станок 4'
+
+            ],
+        crosshair: true
+    },
+    yAxis: {
+
+        title: {
+            text: 'Долив масла, литров'
+        }
+    },
+
+     plotOptions: {
+        column: {
+
+            dataLabels: {
+                enabled: true,
+                 format: '{point.y:.1f}', // one decimal
+            }
+        }
+    },
+    tooltip: {
+        pointFormat: 'долив масла за {series.name}  <b>{point.y:.,.2f}</b><br/>л '
+    },
+
+    series: [{
+        name: 'Предшествующий период',
+        data: [_old[0], _old[1], _old[2], _old[3]],
+
+    },{
+        name: 'Текущий период',
+        data: [_dol[0], _dol[1], _dol[2], _dol[3]],
+
+
+    } ]
+});
+  </script>
+
+     <div class="border" id="container7" style= 'float: left;'></div>
+    <script>
+    _speed1 = {{speed1|safe}};
+    _speed2 = {{speed2|safe}};
+    _speed3 = {{speed3|safe}};
+    _speed4 = {{speed4|safe}};
+    _data1 = {{data1|safe}};
+
+    Highcharts.chart('container7', {
+    chart: {
+        zoomType: 'x',
+    },
+
+    title: {
+        text: 'Величина утечек литр/час'
+    },
+
+    xAxis: {
+              categories: _data1,
+              gridLineWidth: 0.3,
+              tickInterval: 288,
+              gridLineColor: 'black',
+
+
+	    },
+    yAxis: {
+        title: {
+            text: 'л/ч'
+        },
+
+    },
+    tooltip: {
+        pointFormat: '{series.name} утечка составляла <b>{point.y:.,.2f}</b><br/>л/час '
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: 'Станок №1',
+        data: _speed1
+        },
+         {
+        name: 'Станок №2',
+        data: _speed2
+        },
+        {
+        name: 'Станок №3',
+        data: _speed3
+        },
+        {
+        name: 'Станок №4',
+        data: _speed4
+        },
+    ]
+    });
+ </script>
+    <div class="border" id="container8" style= 'float: left;'></div>
+    <script>
+    _speed = {{speed_mean|safe}};
+    _sold={{speed_old|safe}};
+
+    Highcharts.chart('container8', {
+ chart: {
+        type: 'bar'
+    },
+    title: {
+        text: 'Средняя скорость утечек'
+    },
+
+    xAxis: {
+            categories: [
+             'станок 1',
+             'станок 2',
+             'станок 3',
+             'станок 4'
+
+            ],
+        crosshair: true
+    },
+    yAxis: {
+
+        title: {
+            text: 'Скорость утечки, литр/час'
+        }
+    },
+
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    tooltip: {
+        pointFormat: 'Скорость утечки за {series.name}  <b>{point.y:.,.2f}</b>л/час '
+    },
+    plotOptions: {
+        bar: {
+
+            dataLabels: {
+                enabled: true,
+                 format: '{point.y:.1f}', // one decimal
+            }
+        }
+    },
+    series: [{
+        name: 'Предшествующий период',
+        data: [_sold[0], _sold[1], _sold[2], _sold[3]],
+
+    },{
+        name: 'Текущий период',
+        data: [_speed[0], _speed[1], _speed[2], _speed[3]],
+
+
+    } ]
+});
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+  </body>
+</html>
