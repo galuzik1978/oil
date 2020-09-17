@@ -222,7 +222,7 @@ def index(request):
         speed_data4.append(-coef[1] * 12)
         if i < (len(level_cor4) - 50) and abs(level_cor4[i] - predict4[i]) > mis:
             coef = line_model(level_cor4[i:i + 50], i)
-    #подготовка данных о расходе и доливе, перевод в проценты
+    # подготовка данных о расходе и доливе, перевод в проценты
 
     consumption=[0,0,0,0]
 
@@ -239,9 +239,9 @@ def index(request):
     sum_dol[:] = [x / s_d for x in sum_dol]
     print(con)
     context={"data1": data_1, "level1": level_1,
-            "level2": level_2,
-            "level3": level_3,
-            "level4": level_4,
+             "level2": level_2,
+             "level3": level_3,
+             "level4": level_4,
              "model1": predict1, "model2": predict2,
              "model3": predict3, "model4": predict4,
              'consumption_per': consumption, 'doliv_per':sum_dol,
