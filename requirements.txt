@@ -29,6 +29,7 @@ Flask-Principal==0.4.0
 Flask-SQLAlchemy==2.4.4
 Flask-WTF==0.14.2
 fluidity-sm==0.2.0
+gunicorn==20.0.4
 idna==2.8
 invoke==1.4.1
 isort==4.3.21
