@@ -40,9 +40,9 @@ def index(request):
 
     '''
     if 'Otchet' in request.POST and request.POST['Otchet']:
-        print(pytz.unicode("отчет напечатан"))
+        print("отчет напечатан")
     else:
-        print(pytz.unicode('Что то пошло не так'))
+        print('Что то пошло не так')
 
 
     # формирование выборки
