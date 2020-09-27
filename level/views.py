@@ -21,24 +21,24 @@ def index(request):
 
     '''Для тестирования'''
     start_date='2020-08-01'
-    end_date='2020-08-10'
-
+    last_date='2020-08-10'
 
     if request.method == 'GET':
         form=DateForm(request.GET)
         if form.is_valid():
             start_date=form.cleaned_data['start_date']
-            end_date = form.cleaned_data['end_date']
+            last_date = form.cleaned_data['last_date']
+
         else:
             start_date = date.today()
-            end_date = date.today() - timedelta(weeks=1)
+            last_date = date.today() - timedelta(weeks=1)
             messages.info(request, 'Введены некорректные данные! Выбрана текущая дата.')
 
     '''if 'start_date' in request.GET and request.GET['start_date']:
         start_date=request.GET['start_date']
 
-    if 'end_date' in request.GET and request.GET['end_date']:
-        end_date=request.GET['end_date']
+    if 'last_date' in request.GET and request.GET['last_date']:
+        last_date=request.GET['last_date']
 
     '''
     if 'Otchet' in request.POST and request.POST['Otchet']:
@@ -49,8 +49,8 @@ def index(request):
 
     # формирование выборки
 
-    def bd_query (stan,start_date, end_date):
-        test=stan.objects.filter(date_value__range=[start_date, end_date])
+    def bd_query (stan,start_date, last_date):
+        test=stan.objects.filter(date_value__range=[start_date, last_date]).order_by('date_value')
         level=[]
         data=[]
         if not test:
@@ -69,27 +69,27 @@ def index(request):
     period = timedelta(7)
 
 
-    level_1,data_1=bd_query(Stan1, start_date, end_date)
+    level_1,data_1=bd_query(Stan1, start_date, last_date)
 
-    level_2, data_2 = bd_query(Stan2, start_date, end_date)
+    level_2, data_2 = bd_query(Stan2, start_date, last_date)
 
-    level_3, data_3 = bd_query(Stan3, start_date, end_date)
+    level_3, data_3 = bd_query(Stan3, start_date, last_date)
 
-    level_4, data_4 = bd_query(Stan4, start_date, end_date)
+    level_4, data_4 = bd_query(Stan4, start_date, last_date)
 
 
     """предшествующий период для сравнения"""
 
     start_date=datetime.strptime(str(start_date), "%Y-%m-%d")
-    end_date=datetime.strptime(str(end_date), "%Y-%m-%d")
+    last_date=datetime.strptime(str(last_date), "%Y-%m-%d")
 
-    old_level_1, old_data_1 = bd_query(Stan1, start_date-period, end_date-period)
+    old_level_1, old_data_1 = bd_query(Stan1, start_date-period, last_date-period)
 
-    old_level_2, old_data_2 = bd_query(Stan2, start_date-period, end_date-period)
+    old_level_2, old_data_2 = bd_query(Stan2, start_date-period, last_date-period)
 
-    old_level_3, old_data_3 = bd_query(Stan3, start_date-period, end_date-period)
+    old_level_3, old_data_3 = bd_query(Stan3, start_date-period, last_date-period)
 
-    old_level_4, old_data_4 = bd_query(Stan4, start_date-period, end_date-period)
+    old_level_4, old_data_4 = bd_query(Stan4, start_date-period, last_date-period)
 
 
 
@@ -329,7 +329,8 @@ def index(request):
              'consumption': con, 'doliv': dol, 'old_dol':old_dol,
              'speed1': speed_data1, 'speed2': speed_data2,
              'speed3': speed_data3,'speed4': speed_data4,
-             'speed_mean':speed_mean, 'speed_old':speed_old}
+             'speed_mean':speed_mean, 'speed_old':speed_old,
+             'form': form}
 
     return render(request, 'index.html', context)
 

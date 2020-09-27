@@ -19,8 +19,7 @@
 
       <form action="" method="get" style="width: 100%">{% csrf_token %}
 
-      <input name="start_date" style="width: 40% float:left" type="text" placeholder="Начальная дата" aria-label="First date" class="form-control start-date">
-      <input name='end_date' style="width: 40% float: right" type="text" placeholder="Крайняя дата" aria-label="End date" class="form-control end-date">
+      {{ form.as_p }}
       <input type="submit" value="выбрать"style=" float: right">
 
       </form>
@@ -62,7 +61,7 @@
 
     $(function() {
       var $startDate = $('.start-date');
-      var $endDate = $('.end-date');
+      var $endDate = $('.last-date');
 
       $startDate.datepicker({
         autoHide: true,
