@@ -22,7 +22,6 @@ def index(request):
     '''Для тестирования'''
     start_date='2020-08-01'
     last_date='2020-08-10'
-    
     form = DateForm(request.GET)
     if request.method == 'GET':
 
