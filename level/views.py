@@ -1,108 +1,48 @@
+import locale
+
+import pytz
 from django.shortcuts import render
 import numpy as np
+from django.views import generic
+
 from level.models import Stan4,Stan3,Stan2,Stan1
 from sklearn.linear_model import LinearRegression
 import copy
-from django.views import generic
-import pandas as pd
-import pytz
-import locale
-from datetime import datetime, timedelta
-from openpyxl import load_workbook, workbook
-from os.path import join, abspath
-from .forms import ImportFileForm
+from datetime import timedelta,datetime, date
+from .forms import DateForm, ImportFileForm
+from django.contrib import messages
 
-def read_x(col_number, source):
-    name = []
-    for col in source.iter_rows(min_row=2, min_col=col_number,
-                                max_col=col_number, max_row=source.max_row):
-        for cell in col:
-            name.insert(0, cell.value)
-    return name
+import pandas as pd
 
 
 def index(request):
-    """
-    # ------------------------------------Для БД-----------------------------
-    # функция чтения из экселя аргументы: номер столбца, рабочая книга
-    print(head)
-    ""
 
-    work_sheet = load_workbook('test.xlsx')
-
-    Date = read_x(1, work_sheet)
-    level = read_x(2, work_sheet)
-    temp = read_x(7, work_sheet)
-    power = read_x(8, work_sheet)
-    pocket = read_x(10, work_sheet)
-
-    for i in range(len(Date)):
-        if 'января' in Date[i]:
-            Date[i] = Date[i].replace('января', 'january')
-        if 'февраля' in Date[i]:
-            Date[i] = Date[i].replace('февраля', 'February')
-        if 'марта' in Date[i]:
-            Date[i] = Date[i].replace('марта', 'march')
-        if 'апреля' in Date[i]:
-            Date[i] = Date[i].replace('апреля', 'april')
-        if 'мая' in Date[i]:
-            Date[i] = Date[i].replace('мая', 'may')
-        if 'июня' in Date[i]:
-            Date[i] = Date[i].replace('июня', 'june')
-        if 'июля' in Date[i]:
-            Date[i] = Date[i].replace('июля', 'july')
-        if 'августа' in Date[i]:
-            Date[i] = Date[i].replace('августа', 'august')
-        if 'сентябр' in Date[i]:
-            Date[i] = Date[i].replace('сентября', 'september')
-        if 'октября' in Date[i]:
-            Date[i] = Date[i].replace('октября', 'october')
-        if 'ноября' in Date[i]:
-            Date[i] = Date[i].replace('ноября', 'november')
-        if 'декабря' in Date[i]:
-            Date[i] = Date[i].replace('декабря', 'december')
-        Date[i] = datetime.strptime(Date[i], '%d %B %Y г., %H:%M')
-
-
-    # формируем dataframe для работы с датами
-    oil_df = pd.DataFrame({'Расход масла': level,
-                           'Температура': temp,
-                           'Питание': power,
-                           '№ пакета': pocket}, index=Date)
-
-    oil_df = oil_df.resample('5T').first()  # интервал в 5 минут с усреднением
-    oil_df.ffill(inplace=True)  # заполнение отсутствующих измерений
-
-    level = oil_df['Расход масла']
-    level = level.tolist()
-
-    temp = oil_df['Температура']
-    temp = temp.tolist()
-
-    power = oil_df['Питание']
-    power = power.tolist()
-
-    pocket = oil_df['№ пакета']
-    pocket = pocket.tolist()
-
-    data = oil_df.index
-    data = data.tolist()
-
-
-    for i in range(len(level)):
-        b = Stan3(date_value=data[i], level_value=level[i],
-                  temp_value=temp[i], package_value=pocket[i], power_value=power[i])
-        b.save()
-    """
+    '''Для тестирования'''
     start_date='2020-08-01'
     end_date='2020-08-10'
 
-    if 'start_date' in request.GET and request.GET['start_date']:
+
+    if request.method == 'GET':
+        form=DateForm(request.GET)
+        if form.is_valid():
+            start_date=form.cleaned_data['start_date']
+            end_date = form.cleaned_data['end_date']
+        else:
+            start_date = date.today()
+            end_date = date.today() - timedelta(weeks=1)
+            messages.info(request, 'Введены некорректные данные! Выбрана текущая дата.')
+
+    '''if 'start_date' in request.GET and request.GET['start_date']:
         start_date=request.GET['start_date']
 
     if 'end_date' in request.GET and request.GET['end_date']:
         end_date=request.GET['end_date']
 
+    '''
+    if 'Otchet' in request.POST and request.POST['Otchet']:
+        print("отчет напечатан")
+    else:
+        print('Что то пошло не так')
 
 
     # формирование выборки
@@ -111,6 +51,9 @@ def index(request):
         test=stan.objects.filter(date_value__range=[start_date, end_date])
         level=[]
         data=[]
+        if not test:
+            data.append(0)
+            level.append(0)
         for i in range (len(test)):
             data.append(test[i].date_value)
             level.append(test[i].level_value)
@@ -119,32 +62,33 @@ def index(request):
         for i in range (len(data)):
             data[i]=str(data[i])[0:16]
         return (level, data)
+
     """ пример даты 2020-08-01"""
     period = timedelta(7)
 
 
     level_1,data_1=bd_query(Stan1, start_date, end_date)
-    if not level_1: level_1=[0]
+
     level_2, data_2 = bd_query(Stan2, start_date, end_date)
-    if not level_2: level_2 = [0]
+
     level_3, data_3 = bd_query(Stan3, start_date, end_date)
-    if not level_3: level_3 = [0]
+
     level_4, data_4 = bd_query(Stan4, start_date, end_date)
-    if not level_4: level_4 = [0]
+
 
     """предшествующий период для сравнения"""
 
-    start_date=datetime.strptime(start_date, "%Y-%m-%d")
-    end_date=datetime.strptime(end_date, "%Y-%m-%d")
+    start_date=datetime.strptime(str(start_date), "%Y-%m-%d")
+    end_date=datetime.strptime(str(end_date), "%Y-%m-%d")
 
     old_level_1, old_data_1 = bd_query(Stan1, start_date-period, end_date-period)
-    if not old_level_1: old_level_1 = [0]
+
     old_level_2, old_data_2 = bd_query(Stan2, start_date-period, end_date-period)
-    if not old_level_2: old_level_2 = [0]
+
     old_level_3, old_data_3 = bd_query(Stan3, start_date-period, end_date-period)
-    if not old_level_3: old_level_3 = [0]
+
     old_level_4, old_data_4 = bd_query(Stan4, start_date-period, end_date-period)
-    if not old_level_4: old_level_4 = [0]
+
 
 
     #функция построения модели
@@ -164,9 +108,9 @@ def index(request):
             if i == 0 or i == (len(arg)):
                 res.append(arg[i])
             else:
-                if abs(res[i - 1] - arg[i]) > 5 and (
-                        abs(arg[i] - arg[i + 1]) > 5 or ((abs(arg[i] - arg[i + 5])) > 5) or (
-                        (abs(arg[i] - arg[i + 10])) > 5)):
+                if abs(res[i - 1] - arg[i]) > 15 and (
+                        abs(arg[i] - arg[i + 1]) > 15 or ((abs(arg[i] - arg[i + 5])) > 15) or (
+                        (abs(arg[i] - arg[i + 10])) > 15)):
                     res.append(res[i - 1])
                 else:
                     res.append(arg[i])
@@ -183,11 +127,11 @@ def index(request):
 
         return res
     # величина контрольной ошибки
-    mis = 8
-    lenth=60
+    mis = 7
+    lenth=80
 
     cor1=corr(level_1)
-    dol1 = doliv(cor1, 5)
+    dol1 = doliv(cor1, 4)
     level_cor1 = []
     for i in range(len(cor1)):
         level_cor1.append(cor1[i] - dol1[i])
@@ -206,7 +150,7 @@ def index(request):
             speed_data1[i] = (-coef[1] * 12)
 
     cor2 = corr(level_2)
-    dol2 = doliv(cor2, 5)
+    dol2 = doliv(cor2, 4)
     level_cor2 = []
     for i in range(len(cor2)):
         level_cor2.append(cor2[i] - dol2[i])
@@ -224,7 +168,7 @@ def index(request):
             speed_data2[i]=(-coef[1] * 12)
 
     cor3 = corr(level_3)
-    dol3 = doliv(cor3, 5)
+    dol3 = doliv(cor3, 4)
     level_cor3 = []
     for i in range(len(cor3)):
         level_cor3.append(cor3[i] - dol3[i])
@@ -242,7 +186,7 @@ def index(request):
             speed_data3[i] = (-coef[1] * 12)
 
     cor4 = corr(level_4)
-    dol4 = doliv(cor4, 5)
+    dol4 = doliv(cor4, 4)
     level_cor4 = []
     for i in range(len(cor4)):
         level_cor4.append(cor4[i] - dol4[i])
@@ -371,6 +315,7 @@ def index(request):
     old_dol = [old_dol1[-1], old_dol2[-1], old_dol3[-1], old_dol4[-1]]
     speed_old=[np.mean(speed_old1), np.mean(speed_old2), np.mean(speed_old3), np.mean(speed_old4)]
 
+
     """------------------------вывод-------------------------------"""
 
     context={"data1": data_1, "level1": level_1,
@@ -390,7 +335,7 @@ def index(request):
 class ImportFile(generic.FormView):
     template_name = 'import_file.html'
     form_class = ImportFileForm
-    success_url = '/thanks/'
+    success_url = 'thanks'
 
     def form_valid(self, form):
         # Сохраняем данные из файла в базу данных
@@ -415,5 +360,10 @@ class ImportFile(generic.FormView):
                 package_value=row[9],
                 power_value=row[7]
             )
-        print(data)
 
+
+class SuccessLoadedView(generic.TemplateView):
+    template_name = "succes.html"
+
+class NotReadyView(generic.TemplateView):
+    template_name = "notready.html"

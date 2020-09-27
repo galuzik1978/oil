@@ -4,35 +4,139 @@
    {%load static %}
     <title>Big Analytics</title>
 
-      <meta charset="utf-8">
+  <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Datepicker</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+
+
   <link rel="stylesheet" href="{% static '/css/datepicker.css' %}">
+ <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../static/plugins/fontawesome-free/css/all.min.css">
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../static/css/adminlte.min.css">
 
   </head>
-  <body>
-    <div class="container">
+
+
+ <body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4" >
+
+    <!-- Brand Logo -->
+    <a >
+      <img src="../static/tmk_logo_ru1.png">
+         </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+
+        <div class="info">
+          <a class="d-block">"Системы аналитики"</a>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link active">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Выбор системы
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="" class="nav-link active">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Масло</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Вибрация</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper" >
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+             <div class="container">
+
     <h1>Анализируемый период</h1>
 
-    <div class="input-group">
+    <div class="input-group" style="width: 95%">
       <div class="input-group-prepend">
         <span class="input-group-text">Диапазон дат</span>
       </div>
 
-      <form action="" method="get">{% csrf_token %}
-      <input name="start_date" type="text" placeholder="Начальная дата" aria-label="First date" class="form-control start-date">
-      <input name='end_date' type="text" placeholder="Крайняя дата" aria-label="End date" class="form-control end-date">
-      <input type="submit" value="выбрать">
+      <form action="" method="get" style="width: 100%">{% csrf_token %}
+
+      <input name="start_date" style="width: 40% float:left" type="text" placeholder="Начальная дата" aria-label="First date" class="form-control start-date">
+      <input name='end_date' style="width: 40% float: right" type="text" placeholder="Крайняя дата" aria-label="End date" class="form-control end-date">
+      <input type="submit" value="выбрать"style=" float: right">
+
       </form>
 
+      <form action="" method="post" style="width: 100%">
+      {% csrf_token %}
+      <input type="submit" name="Otchet" style=" float: right" value="Сформировать отчет">
+      </form>
+
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
       </div>
   </div>
+          </div>
 
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        </div>
+      </div><!-- /.container-fluid -->
+
+    </section>
+
+
+  <script src="{% static 'plugins/jquery/jquery.min.js'%}" crossorigin="anonymous"></script>
+
+  <script src="{% static 'bootstrap.bundle.min.js'%}" crossorigin="anonymous"></script>
   <script src="{% static 'datepicker.js'%}"></script>
+<!-- AdminLTE -->
+    <script src="{% static 'dist/js/adminlte.js'%}"></script>
+ <!-- Chartjs libraries -->
+    <script src="{% static 'highcharts.js'%}"></script>
+    <script src="{% static 'exporting.js'%}"></script>
+    <script src="{% static 'export-data.js'%}"></script>
 
     <script>
 
@@ -54,13 +158,135 @@
     });
   </script>
 
-    <!-- Chartjs libraries -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <!--Level card -->
+    <div class="card card-dark">
+  <div class="card-header">
+    <h3 class="card-title">Уровень масла</h3>
+    <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <div class="border" id="container" style="width: 95%; height: 400px; margin: 0 auto"></div>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+<!--Model card -->
+    <div class="card card-dark">
+  <div class="card-header">
+    <h3 class="card-title">Модель</h3>
+    <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <div class="border" id="container2" style="width: 95%; height: 400px; margin: 1 auto"></div>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+<!--Diagram card -->
+    <div class="card card-warning">
+  <div class="card-header">
+    <h3 class="card-title">Расход и долив масла(%)</h3>
+    <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <div id="container3" style= 'float: left; min-width: 50%;'></div>
+    <div id="container4"style= 'float: left;min-width: 50%;'></div>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+<!--Chart card -->
+    <div class="card card-info" style= 'float: left;min-width: 49%'>
+  <div class="card-header">
+    <h3 class="card-title">Расход масла</h3>
+    <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <div id="container5" style= ' min-width: 100%'></div>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+      <!--Chart card -->
+    <div class="card card-info" style= 'float: right;min-width:49%'>
+  <div class="card-header">
+    <h3 class="card-title">Долив масла</h3>
+    <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <div id="container6"style= 'float: left;min-width: 100%'></div>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+       <!--Speed card -->
+    <div class="card card-success" style= 'float: left; min-width:49%'>
+  <div class="card-header">
+    <h3 class="card-title">Скорость утечки</h3>
+    <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <div class="border" id="container7" style= ' min-width: 100%'></div>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+      <!--Speed period card -->
+    <div class="card card-success" style= 'float: right; min-width:49%'>
+  <div class="card-header">
+    <h3 class="card-title">Средняя скорость утечек</h3>
+    <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    <div class="border" id="container8" style= ' min-width: 100%'></div>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
 
 
-    <div class="border" id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
+<!--Hihgchart graf-->
       <script>
       _level1 = {{level1|safe}};
       _data1 = {{data1|safe}};
@@ -76,9 +302,7 @@
 
 
 	    },
-	    title: {
-              text: 'Уровень масла'
-	    },
+	    title: {text: '' },
 
 	    xAxis: {
               categories: _data1,
@@ -96,6 +320,7 @@
 
 	    },
 	    plotOptions: {
+	    format: '{point.y:.1f}',
                 area: {
                     fillColor: {
                         linearGradient: {
@@ -148,7 +373,7 @@
         }
       });
       </script>
-    <div class="border" id="container2" style="min-width: 310px; height: 500px; margin: 1 auto"></div>
+<!--model-->
       <script>
       _model1 = {{model1|safe}};
       _model2={{model2|safe}};
@@ -163,7 +388,7 @@
 
 	    },
 	    title: {
-              text: 'Модель'
+              text: ''
 	    },
 
 	    xAxis: {
@@ -183,6 +408,7 @@
               gridLineColor: 'black',
 	    },
 	    plotOptions: {
+	            format: '{point.y:.1f}',
                 area: {
                     fillColor: {
                         linearGradient: {
@@ -237,7 +463,8 @@
 
 
       </script>
-    <div id="container3" style= 'float: left;'></div>
+
+ <!-- diagramms-->
     <script>
     _consumption = {{consumption_per|safe}};
     Highcharts.chart('container3', {
@@ -289,7 +516,7 @@
     });
   </script>
 
-    <div id="container4"style= 'float: left;'></div>
+
     <script>
     _doliv = {{doliv_per|safe}};
     Highcharts.chart('container4', {
@@ -342,7 +569,8 @@
     });
 
   </script>
-    <div id="container5" style= 'float: left;'></div>
+      <!--charts-->
+
     <script>
     _con = {{consumption|safe}};
     Highcharts.chart('container5', {
@@ -350,60 +578,73 @@
         type: 'column'
     },
     title: {
-        text: 'Утечки масла'
+        text: ''
     },
 
     xAxis: {
+            categories: [
+             'станок 1',
+             'станок 2',
+             'станок 3',
+             'станок 4'
 
+            ],
         crosshair: true
     },
-    yAxis: {
 
-        title: {
+    yAxis: {
+         title: {
             text: 'Утечки масла, литров'
-        }
+        },
+
     },
+    tooltip: {
+        pointFormat: ' {series.name} утечка <b>{point.y:.,.2f}</b><br/>л '
+    },
+
 
     plotOptions: {
         column: {
-            pointPadding: 0.2,
-            borderWidth: 0
+
+            dataLabels: {
+                enabled: true,
+                 format: '{point.y:.1f}', // one decimal
+            }
         }
     },
     series: [{
-        name: 'Станок №1',
-        data: [_con[0]],
+        name: 'Предшествующий период',
+        data: [_con[4], _con[5], _con[6], _con[7]],
 
-    }, {
-        name: 'Станок №2',
-        data: [_con[1]],
+    },{
+        name: 'Текущий период',
+        data: [_con[0], _con[1], _con[2], _con[3]],
 
-    }, {
-        name: 'Станок №3',
-        data: [_con[2]],
-
-    }, {
-        name: 'Станок №4',
-        data: [_con[3]],
-
-    }]
+    } ]
 });
   </script>
 
-    <div id="container6"style= 'float: left;'></div>
+
     <script>
     _dol = {{doliv|safe}};
+    _old={{old_dol|safe}};
 
     Highcharts.chart('container6', {
  chart: {
         type: 'column'
     },
     title: {
-        text: 'Долив масла'
+        text: ''
     },
 
     xAxis: {
+            categories: [
+             'станок 1',
+             'станок 2',
+             'станок 3',
+             'станок 4'
 
+            ],
         crosshair: true
     },
     yAxis: {
@@ -413,33 +654,33 @@
         }
     },
 
-    plotOptions: {
+     plotOptions: {
         column: {
-            pointPadding: 0.2,
-            borderWidth: 0
+
+            dataLabels: {
+                enabled: true,
+                 format: '{point.y:.1f}', // one decimal
+            }
         }
     },
+    tooltip: {
+        pointFormat: 'долив масла за {series.name}  <b>{point.y:.,.2f}</b><br/>л '
+    },
+
     series: [{
-        name: 'Станок №1',
-        data: [_dol[0]],
+        name: 'Предшествующий период',
+        data: [_old[0], _old[1], _old[2], _old[3]],
 
-    }, {
-        name: 'Станок №2',
-        data: [_dol[1]],
+    },{
+        name: 'Текущий период',
+        data: [_dol[0], _dol[1], _dol[2], _dol[3]],
 
-    }, {
-        name: 'Станок №3',
-        data: [_dol[2]],
 
-    }, {
-        name: 'Станок №4',
-        data: [_dol[3]],
-
-    }]
+    } ]
 });
   </script>
-
-     <div class="border" id="container7" style="min-width: 310px; height: 500px; margin: 1 auto"></div>
+<!--Speed-->
+     <div class="border" id="container7" style= 'float: left; min-width: 49%'></div>
     <script>
     _speed1 = {{speed1|safe}};
     _speed2 = {{speed2|safe}};
@@ -453,13 +694,13 @@
     },
 
     title: {
-        text: 'Величина утечек литр/час'
+        text: ''
     },
 
     xAxis: {
               categories: _data1,
               gridLineWidth: 0.3,
-              tickInterval: 100,
+              tickInterval: 288,
               gridLineColor: 'black',
 
 
@@ -471,9 +712,14 @@
 
     },
     tooltip: {
-        pointFormat: '{series.name} утечка составляла <b>{point.y:.,.2f}</b><br/>литров в час {point.x}'
+        pointFormat: '{series.name} утечка составляла <b>{point.y:.,.2f}</b><br/>л/час '
     },
-
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
     series: [{
         name: 'Станок №1',
         data: _speed1
@@ -493,9 +739,70 @@
     ]
     });
  </script>
+    <!--Speed period-->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <script>
+    _speed = {{speed_mean|safe}};
+    _sold={{speed_old|safe}};
+
+    Highcharts.chart('container8', {
+ chart: {
+        type: 'bar'
+    },
+    title: {
+        text: 'Средняя скорость утечек'
+    },
+
+    xAxis: {
+            categories: [
+             'станок 1',
+             'станок 2',
+             'станок 3',
+             'станок 4'
+
+            ],
+        crosshair: true
+    },
+    yAxis: {
+
+        title: {
+            text: ''
+        }
+    },
+
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    tooltip: {
+        pointFormat: 'Скорость утечки за {series.name}  <b>{point.y:.,.2f}</b>л/час '
+    },
+    plotOptions: {
+        bar: {
+
+            dataLabels: {
+                enabled: true,
+                 format: '{point.y:.2f}', // one decimal
+            }
+        }
+    },
+    series: [{
+        name: 'Предшествующий период',
+        data: [_sold[0], _sold[1], _sold[2], _sold[3]],
+
+    },{
+        name: 'Текущий период',
+        data: [_speed[0], _speed[1], _speed[2], _speed[3]],
+
+
+    } ]
+});
+
+
+    </script>
 
   </body>
 </html>

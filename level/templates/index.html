@@ -1,38 +1,62 @@
-<!doctype html>
-<html lang="en">
-  <head>
-   {%load static %}
-    <title>Big Analytics</title>
+{% extends "base_template.html" %}
+{% load static %}
+{% block main_content %}
+<!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper" >
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+             <div class="container">
 
-      <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Datepicker</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="{% static '/css/datepicker.css' %}">
-
-  </head>
-  <body>
-    <div class="container">
     <h1>Анализируемый период</h1>
 
-    <div class="input-group">
+    <div class="input-group" style="width: 95%">
       <div class="input-group-prepend">
         <span class="input-group-text">Диапазон дат</span>
       </div>
 
-      <form action="" method="get">{% csrf_token %}
-      <input name="start_date" type="text" placeholder="Начальная дата" aria-label="First date" class="form-control start-date">
-      <input name='end_date' type="text" placeholder="Крайняя дата" aria-label="End date" class="form-control end-date">
-      <input type="submit" value="выбрать">
+      <form action="" method="get" style="width: 100%">{% csrf_token %}
+
+      <input name="start_date" style="width: 40% float:left" type="text" placeholder="Начальная дата" aria-label="First date" class="form-control start-date">
+      <input name='end_date' style="width: 40% float: right" type="text" placeholder="Крайняя дата" aria-label="End date" class="form-control end-date">
+      <input type="submit" value="выбрать"style=" float: right">
+
       </form>
 
+      <form action="" method="post" style="width: 100%">
+      {% csrf_token %}
+      <input type="submit" name="Otchet" style=" float: right" value="Сформировать отчет">
+      </form>
+
+        {% if messages %}
+        <ul class="messages">
+        {% for message in messages %}
+        <li>{% if message.tags %} {% endif %}{{ message }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
       </div>
   </div>
+          </div>
 
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        </div>
+      </div><!-- /.container-fluid -->
+
+    </section>
+
+
+  <script src="{% static 'plugins/jquery/jquery.min.js'%}" crossorigin="anonymous"></script>
+
+  <script src="{% static 'bootstrap.bundle.min.js'%}" crossorigin="anonymous"></script>
   <script src="{% static 'datepicker.js'%}"></script>
+<!-- AdminLTE -->
+    <script src="{% static 'dist/js/adminlte.js'%}"></script>
+ <!-- Chartjs libraries -->
+    <script src="{% static 'highcharts.js'%}"></script>
+    <script src="{% static 'exporting.js'%}"></script>
+    <script src="{% static 'export-data.js'%}"></script>
 
     <script>
 
@@ -54,13 +78,170 @@
     });
   </script>
 
-    <!-- Chartjs libraries -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <!--Level card -->
+    <div class="col-auto">
+      <div class="card card-outline card-info">
+        <div class="card-header">
+          <h3 class="card-title">Уровень масла</h3>
+            <div class="card-tools">
+      <!-- Collapse Button -->
+        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+            </div>
+    <!-- /.card-tools -->
+        </div>
+  <!-- /.card-header -->
+  <div class="card-body" id="container">
+  </div>
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+<!--Model card -->
+    <div class="col-auto">
+    <div class="card card-outline card-info">
+  <div class="card-header">
+    <h3 class="card-title">Модель</h3>
+    <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+  </div>
+    <!-- /.card-tools -->
+
+  <!-- /.card-header -->
+  <div class="card-body" id="container2"  >
+
+  </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+
+<!--Diagram card -->
+         <div class="row mb-2">
+      <div class="col-sm-6">
+
+        <div class="card card-outline card-info">
+            <div class="card-header">
+                <h3 class="card-title">Расход масла(%)</h3>
+            <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body" id="container3">
+
+  </div>
+    </div>
+  <!-- /.card-body -->
+</div>
+<!-- /.card -->
+<!--Diagram card -->
+          <div class="col-sm-6">
+        <div class="card card-outline card-info">
+            <div class="card-header">
+                <h3 class="card-title">Долив масла(%)</h3>
+            <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body" id="container4">
+
+  </div>
+    </div>
+  <!-- /.card-body -->
+</div>
+         </div>
+
+<!-- /.card -->
 
 
-    <div class="border" id="container" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
+<!--Chart card -->
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <div class="card card-outline card-info" >
+          <div class="card-header">
+            <h3 class="card-title">Расход масла</h3>
+              <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+              </div>
+          </div>
+      <!-- /.card-header -->
+      <div class="card-body" id="container5">
+      </div>
+  <!-- /.card-body -->
+    </div>
+      </div>
+<!-- /.card -->
+      <!--Chart card -->
+       <div class="col-sm-6">
+    <div class="card card-outline card-info" >
+  <div class="card-header">
+    <h3 class="card-title">Долив масла</h3>
+    <div class="card-tools">
+      <!-- Collapse Button -->
+      <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body" id="container6">
+  </div>
+
+  </div>
+  <!-- /.card-body -->
+</div>
+    </div>
+<!-- /.card -->
+
+       <!--Speed card -->
+     <div class="row mb-2">
+         <div class="col-sm-6">
+            <div class="card card-outline card-info" >
+              <div class="card-header">
+                <h3 class="card-title">Скорость утечки</h3>
+                  <div class="card-tools">
+      <!-- Collapse Button -->
+                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                  </div>
+    <!-- /.card-tools -->
+              </div>
+  <!-- /.card-header -->
+            <div class="card-body" id="container7">
+          </div>
+  <!-- /.card-body -->
+          </div>
+         </div>
+<!-- /.card -->
+
+      <!--Speed period card -->
+         <div class="col-sm-6">
+            <div class="card card-outline card-info" >
+              <div class="card-header">
+                <h3 class="card-title">Средняя скорость утечек</h3>
+                  <div class="card-tools">
+      <!-- Collapse Button -->
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                  </div>
+    <!-- /.card-tools -->
+              </div>
+  <!-- /.card-header -->
+            <div class="card-body" id="container8">
+            </div>
+  <!-- /.card-body -->
+          </div>
+         </div>
+     </div>
+<!-- /.card -->
+
+
+<!--Hihgchart graf-->
       <script>
       _level1 = {{level1|safe}};
       _data1 = {{data1|safe}};
@@ -76,9 +257,7 @@
 
 
 	    },
-	    title: {
-              text: 'Уровень масла'
-	    },
+	    title: {text: '' },
 
 	    xAxis: {
               categories: _data1,
@@ -149,7 +328,7 @@
         }
       });
       </script>
-    <div class="border" id="container2" style="min-width: 310px; height: 500px; margin: 1 auto"></div>
+<!--model-->
       <script>
       _model1 = {{model1|safe}};
       _model2={{model2|safe}};
@@ -164,7 +343,7 @@
 
 	    },
 	    title: {
-              text: 'Модель'
+              text: ''
 	    },
 
 	    xAxis: {
@@ -239,7 +418,8 @@
 
 
       </script>
-    <div id="container3" style= 'float: left;'></div>
+
+ <!-- diagramms-->
     <script>
     _consumption = {{consumption_per|safe}};
     Highcharts.chart('container3', {
@@ -268,7 +448,7 @@
         }
     },
   title: {
-              text: 'Расход'
+              text: ''
 	    },
   series: [{
     name: 'Расход',
@@ -291,7 +471,7 @@
     });
   </script>
 
-    <div id="container4"style= 'float: left;'></div>
+
     <script>
     _doliv = {{doliv_per|safe}};
     Highcharts.chart('container4', {
@@ -320,7 +500,7 @@
         }
     },
   title: {
-              text: 'Долив'
+              text: ''
 	    },
 
   series: [{
@@ -344,7 +524,8 @@
     });
 
   </script>
-    <div id="container5" style= 'float: left;'></div>
+      <!--charts-->
+
     <script>
     _con = {{consumption|safe}};
     Highcharts.chart('container5', {
@@ -352,7 +533,7 @@
         type: 'column'
     },
     title: {
-        text: 'Утечки масла'
+        text: ''
     },
 
     xAxis: {
@@ -398,7 +579,7 @@
 });
   </script>
 
-    <div id="container6"style= 'float: left;'></div>
+
     <script>
     _dol = {{doliv|safe}};
     _old={{old_dol|safe}};
@@ -408,7 +589,7 @@
         type: 'column'
     },
     title: {
-        text: 'Долив масла'
+        text: ''
     },
 
     xAxis: {
@@ -453,8 +634,8 @@
     } ]
 });
   </script>
+<!--Speed-->
 
-     <div class="border" id="container7" style= 'float: left;'></div>
     <script>
     _speed1 = {{speed1|safe}};
     _speed2 = {{speed2|safe}};
@@ -468,7 +649,7 @@
     },
 
     title: {
-        text: 'Величина утечек литр/час'
+        text: ''
     },
 
     xAxis: {
@@ -513,7 +694,9 @@
     ]
     });
  </script>
-    <div class="border" id="container8" style= 'float: left;'></div>
+    <!--Speed period-->
+
+
     <script>
     _speed = {{speed_mean|safe}};
     _sold={{speed_old|safe}};
@@ -539,7 +722,7 @@
     yAxis: {
 
         title: {
-            text: 'Скорость утечки, литр/час'
+            text: ''
         }
     },
 
@@ -557,7 +740,7 @@
 
             dataLabels: {
                 enabled: true,
-                 format: '{point.y:.1f}', // one decimal
+                 format: '{point.y:.2f}', // one decimal
             }
         }
     },
@@ -573,9 +756,9 @@
     } ]
 });
 
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
-  </body>
-</html>
+    </script>
+
+  </div>
+  </div>
+{% endblock main_content%}

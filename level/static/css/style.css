@@ -1,0 +1,4 @@
+:not(.layout-fixed)
+.main-sidebar {
+    position: fixed;
+}
