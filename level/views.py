@@ -42,9 +42,9 @@ def index(request):
 
     '''
     if 'Otchet' in request.POST and request.POST['Otchet']:
-        print("отчет напечатан")
+        print("report ready")
     else:
-        print('Что то пошло не так')
+        print('something wrong')
 
 
     # формирование выборки
